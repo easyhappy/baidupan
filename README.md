@@ -19,6 +19,7 @@ Or install it yourself as:
 ## Usage
 
 TODO: Write usage instructions here
+1: 能够连接百度盘
 
 ## Contributing
 

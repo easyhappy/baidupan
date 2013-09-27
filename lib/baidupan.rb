@@ -1,5 +1,9 @@
 require "baidupan/version"
 
 module Baidupan
-  # Your code goes here...
+
+  def hello_world
+    puts 'hello world'
+  end 
+
 end

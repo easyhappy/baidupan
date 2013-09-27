@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "baidupan"
   spec.version       = Baidupan::VERSION
   spec.authors       = ["AndyHu"]
-  spec.email         = ["hushibei@tianji.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["meeasyhappy@gmail.com"]
+  spec.description   = %q{利用百度云盘接口， 实现文件备份功能}
+  spec.summary       = %q{文件上传和查看等功能}
   spec.homepage      = ""
   spec.license       = "MIT"
 
