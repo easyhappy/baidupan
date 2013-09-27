@@ -1,3 +1,4 @@
-require 'baidupan/test'
+#!/usr/bin/env ruby
 
-Baidupan::Test.start
+require 'baidupan/cmd/fs_cmd'
+Baidupan::Cmd::FsCmd.start

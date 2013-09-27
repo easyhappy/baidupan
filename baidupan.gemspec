@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["meeasyhappy@gmail.com"]
   spec.description   = %q{利用百度云盘接口， 实现文件备份功能}
   spec.summary       = %q{文件上传和查看等功能}
-  spec.homepage      = ""
+  spec.homepage      = "http://ml-china.org"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -20,5 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency   "bundler", "~> 1.3"
   spec.add_development_dependency   "rake"
+  spec.add_development_dependency   "typhoeus", ~> 0.6.5
   spec.add_runtime_dependency       "thor"
 end
