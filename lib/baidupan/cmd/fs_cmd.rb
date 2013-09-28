@@ -17,7 +17,7 @@ module Baidupan::Cmd
     end
 
 
-    desc 'list [PATH]', 'list remote files under PATH'
+    desc 'list [Remote path]', 'list files under Remote path'
     def list(rpath=nil)
       res = Baidupan::FsCmd.list(rpath)
       res.body[:list].each do |item|
@@ -27,9 +27,18 @@ module Baidupan::Cmd
     map ls: :list
 
     desc 'upload [Local path, Remote path]', 'upload a local file /path/to/file --> /apps/appname/[rpath|file]'
-    def upload(local_path, rpath=nil)
-      res = Baidupan::FsCmd.upload(local_path, rpath, options.dup)
+    option :ondup, type: :string, desc: <<-Desc, default: :newcopy
+overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”。
+    Desc
+    def upload(lpath, rpath=nil)
+      res = Baidupan::FsCmd.upload(lpath, rpath, options.dup)
       print_item res.body
+    end
+
+
+    desc 'download file [Remote path, Local path',  'download remote file to local, not support for download dir'
+    def download(rpath, lpath=nil)
+      res = Baidupan::FsCmd.download(rpath, lpath, options.dup)
     end
 
   end

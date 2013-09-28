@@ -18,6 +18,10 @@ module Baidupan
       def method_missing(method, *args)
         single_instance.config[method.to_sym]
       end
+
+      def file_path
+        File.join(self.base_url, 'file')
+      end
     end
 
     private

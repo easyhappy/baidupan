@@ -1,6 +1,9 @@
-require "baidupan/version"
 require "typhoeus"
 require 'multi_json'
+
+require "baidupan/version"
+require "baidupan/config"
+
 require 'pry'
 
 module Baidupan
@@ -20,7 +23,11 @@ module Baidupan
       @request = Typhoeus::Request.new(url, @options)
       @request.on_complete do |response|
         if response.success?
-          @body = MultiJson.load(response.body, symbolize_keys: true)
+          if response.headers["Content-Disposition"] =~ /attachment;file/ or response.headers["Content-Type"] =~ /image\//
+            @body = response.body
+          else
+            @body = MultiJson.load(response.body, symbolize_keys: true)
+          end
         end
       end
     end
@@ -40,10 +47,9 @@ module Baidupan
       end
 
       def common_params(method, params={})
-        params = {access_token: Baidupan::Config.access_token}.merge(params)
+        params = {access_token: Config.access_token}.merge(params)
         params.merge!(method: method)
       end
     end
   end
 end
-
