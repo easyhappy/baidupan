@@ -12,7 +12,7 @@ module Baidupan
       end
 
       def upload(lpath, rpath, opts={})
-      	params = common_params(:upload, path: "#{Config.app_root}/#{rpath}/#{lpath}").merge(ondup: :newcopy)
+      	params = common_params(:upload, path: "#{Config.join_path(rpath, File.basename(lpath))}").merge(ondup: :newcopy)
       	params[:ondup] = opts.delete(:ondup) if opts[:ondup]
         
         body = {:file => File.open(lpath)}
@@ -23,7 +23,6 @@ module Baidupan
 
       def download(rpath, lpath, opts={})
       	params = common_params(:download, path: "#{Config.app_root}/#{rpath}")
-
 		    get(Config.file_path, params, opts.merge(followlocation: true))
       end
     end

@@ -26,6 +26,12 @@ module Baidupan
       def time_format
         "%Y%m%d%H%M%S"
       end
+
+      def join_path(*files)
+        files.inject(self.app_root) do |rpath, lpath|
+          File.join(rpath, lpath)
+        end
+      end
     end
 
     private
