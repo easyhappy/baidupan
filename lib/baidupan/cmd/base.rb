@@ -43,5 +43,13 @@ module Baidupan::Cmd
       say '-'*60
       say "Have append access token into file: #{Baidupan::CONF_FILE}"
     end
+
+
+    desc 'show_config', '显示config相关信息'
+    def show_config
+      puts "Using config file: #{Baidupan::CONF_FILE}"
+      puts "With content:"
+      puts File.read(Baidupan::CONF_FILE)
+    end
   end
 end
