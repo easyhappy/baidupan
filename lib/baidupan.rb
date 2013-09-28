@@ -3,6 +3,7 @@ require 'multi_json'
 
 require "baidupan/version"
 require "baidupan/config"
+require "baidupan/core_ext"
 
 require 'pry'
 

@@ -1,0 +1,1 @@
+require 'baidupan/core_ext/hash'

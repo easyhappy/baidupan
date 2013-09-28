@@ -10,7 +10,7 @@ module Baidupan::Cmd
       def print_item(item)
         new_items = []
         new_items << item[:fs_id]
-        new_items << "#{item[:path].sub(Baidupan::Config.app_root + '/', '')}"
+        new_items << "#{item[:path].sub(Baidupan::Config.app_root + '/', '')}#{"/" if item[:isdir] == 1}"
         new_items << "#{Time.at(item[:mtime])}"
         print_in_columns new_items
       end
@@ -96,6 +96,25 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
 
       File.binwrite(lpath, res.body)
       say "download and save at'#{lpath}'..."
+    end
+
+    desc 'url [remote path]', 'get a stream-file url for using online, e.g. <img src="_streamurl" />'
+    def url(rpath)
+      say Baidupan::FsCmd.url(rpath)
+    end
+
+    desc "thumbnail rpath", "获取缩略图"
+    option :quality, type: :numeric, desc: "缩略图的质量，默认为“100”，取值范围(0,100]", default: 100
+    option :height, type: :numeric, desc: "指定缩略图的高度，取值范围为(0,1600]", default: 200
+    option :width, type: :numeric, desc: "指定缩略图的宽度，取值范围为(0,1600]", default: 200
+    def thumbnail(rpath)
+      opts = options.dup
+      say Baidupan::FsCmd.thumbnail(rpath, opts)
+    end
+
+    desc 'mkdir rpath', 'mkdir remote path, e.g. mkdir path/to/newdir'
+    def mkdir(rpath)
+      print_item Baidupan::FsCmd.mkdir(rpath).body
     end
   end
 end

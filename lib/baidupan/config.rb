@@ -19,8 +19,17 @@ module Baidupan
         single_instance.config[method.to_sym]
       end
 
-      def file_path
-        File.join(self.base_url, 'file')
+      def file_path(*files)
+        base_file = File.join(self.base_url, 'file')
+        files.each do |file|
+          base_file = File.join(base_file, file.to_s)
+        end
+
+        base_file
+      end
+
+      def thumbnail
+        File.join(self.base_url, 'thumbnail')
       end
 
       def time_format
@@ -29,7 +38,7 @@ module Baidupan
 
       def join_path(*files)
         files.inject(self.app_root) do |rpath, lpath|
-          File.join(rpath, lpath)
+          File.join(rpath, lpath.to_s)
         end
       end
     end
