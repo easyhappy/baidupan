@@ -30,9 +30,8 @@ module Baidupan::Cmd
     option :ondup, type: :string, desc: <<-Desc, default: :newcopy
 overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”。
     Desc
-    def upload(lpath, rpath=nil, opts={})
-      opts.merge! options.dup
-      res = Baidupan::FsCmd.upload(lpath, rpath, opts)
+    def upload(lpath, rpath=nil)
+      res = Baidupan::FsCmd.upload(lpath, rpath, options.dup)
       print_item res.body
     end
 
@@ -44,13 +43,17 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
     baidupan-0.0.3.gem
     Desc
     option :show, desc: "show files that will be uploaded"
-    #option :recursive, desc: "对子目录递归上传", type: :boolean, aliases: [:r]
+    option :recursive, desc: "对子目录递归上传", type: :boolean
     def batch_upload(ldir, rdir, file_pattern="*")
       opts = options.dup
       old_ldir = ldir
-      if opts.delete[:r]
+      
+      if opts[:recursive]
         ldir = File.join(ldir, "**")
+        opts.delete(:recursive)
       end
+
+
       files = Dir.glob(File.join(ldir, file_pattern)).select{|f| File.file?(f)}
       
       if options[:show]
@@ -68,7 +71,8 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
         dirname = '' if dirname == '.'
 
         rdir = File.join(origin_rdir, dirname)
-        self.upload(file, rdir)
+        Baidupan::FsCmd.upload(file, rdir, opts)
+        say file
         count += 1
       end
       say "total upload #{count} files"
