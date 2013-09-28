@@ -22,6 +22,10 @@ module Baidupan
       def file_path
         File.join(self.base_url, 'file')
       end
+
+      def time_format
+        "%Y%m%d%H%M%S"
+      end
     end
 
     private

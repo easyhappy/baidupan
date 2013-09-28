@@ -1,6 +1,6 @@
+require 'baidupan'
 require 'baidupan/cmd/base'
 require 'baidupan/fs_cmd'
-require 'baidupan'
 
 module Baidupan::Cmd
 
@@ -38,8 +38,22 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
 
     desc 'download file [Remote path, Local path',  'download remote file to local, not support for download dir'
     def download(rpath, lpath=nil)
+      lpath = (lpath||rpath).dup
       res = Baidupan::FsCmd.download(rpath, lpath, options.dup)
-    end
+      
+      if File.exists?(lpath)
+        extname = File.extname(lpath)
+        timestamp_name = "_#{Time.now.strftime(Baidupan::Config.time_format)}_#{rand(10)}#{extname}"
 
+        if extname.empty?
+          lpath += timestamp_name
+        else
+          lpath.gsub!(extname, timestamp_name)
+        end
+      end
+
+      File.binwrite(lpath, res.body)
+      say "download and save at'#{lpath}'..."
+    end
   end
 end

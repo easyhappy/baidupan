@@ -24,7 +24,7 @@ module Baidupan
       def download(rpath, lpath, opts={})
       	params = common_params(:download, path: "#{Config.app_root}/#{rpath}")
 
-		get(Config.file_path, params, opts.merge(followlocation: true))
+		    get(Config.file_path, params, opts.merge(followlocation: true))
       end
     end
   end
