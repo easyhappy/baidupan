@@ -18,8 +18,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
-1: 能够连接百度盘
+Todo：
+  * 移动文件的位置
+  * 删除文件
+  * 对文件重命名
+
+已经实现:
+  * 通过配置连接百度盘
+  * 能够上传、下载以及显示文件
+
+
 
 ## Contributing
 
