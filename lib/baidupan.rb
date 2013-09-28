@@ -9,15 +9,14 @@ module Baidupan
   class Base
     attr_reader :body
 
-    def initialize(url, method=:get, params={}, body={}, options={})
+    def initialize(url, method=:get, params={}, body={}, opts={})
       @options = {
         method: method,
         headers: {"User-Agent"=>"Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"},
         params: params
       }
       @options.merge!(body: body) if body
-      @options.merge!(options)
-
+      @options.merge!(opts)
       @request = Typhoeus::Request.new(url, @options)
       @request.on_complete do |response|
         if response.success?
@@ -37,6 +36,7 @@ module Baidupan
       end
 
       def post(url, params={}, body={}, opts={})
+        new(url, :post, params, body, opts).run!
       end
 
       def common_params(method, params={})
