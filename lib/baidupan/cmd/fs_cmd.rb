@@ -115,12 +115,36 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       print_item Baidupan::FsCmd.mkdir(rpath).body
     end
 
-    desc 'move FROM_RPATH, TO_RPATH', 'move a remote path/to/from --> path/to/to'
+    desc 'move from_rpath, to_rpath', 'move a remote path/to/from --> path/to/to'
     def mv(from_rpath, to_rpath)
-      if to_rpath[-1] == '/'
-        to_rpath += File.basename(from_rpath)
-      end
-      say Baidupan::FsCmd.move(from_rpath, to_rpath).body
+      to_rpath += File.basename(from_rpath) if to_rpath[-1] == '/'                                        
+      say "from_rpath不能和to_rpath相同" and return if from_rpath == to_rpath
+      
+      body = Baidupan::FsCmd.move(from_rpath, to_rpath).body
+
+      say "success to mv file #{body[:extra][:list][0][:from]} ---> #{body[:extra][:list][0][:to]}"
     end
+
+    desc 'copy from_rpath, to_rpath', 'copy a remote path/to/from --> path/to/to'
+    def copy(from_rpath, to_rpath)
+      to_rpath += File.basename(from_rpath) if to_rpath[-1] == '/'                                        
+      say "from_rpath不能和to_rpath相同" and return if from_rpath == to_rpath
+
+      body = Baidupan::FsCmd.copy(from_rpath, to_rpath).body
+      say "success to cp file #{body[:extra][:list][0][:from]} ---> #{body[:extra][:list][0][:to]}"    
+    end
+    map cp: :copy
+
+    desc 'delete rpath', 'delete a remote path'
+    option :force, type: :boolean, default: false
+    def delete(rpath)
+      if options[:force] || yes?("Are you sure to delte #{rpath}?")
+        response = Baidupan::FsCmd.delete(rpath).response
+        say "success to delete  #{rpath}"if response.success?
+      else
+        say "Cancel to delete #{rpath}"
+      end
+    end
+    map del: :delete
   end
 end

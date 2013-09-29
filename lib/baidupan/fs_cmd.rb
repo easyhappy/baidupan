@@ -46,6 +46,18 @@ module Baidupan
                                to: "#{Config.join_path(to_rpath)}")
         post(Config.file_path, params)
       end
+
+      def copy(from_rpath, to_rpath)
+        params = common_params(:copy, 
+                               from: "#{Config.join_path(from_rpath)}",
+                               to: "#{Config.join_path(to_rpath)}")
+        post(Config.file_path, params)
+      end
+
+      def delete(rpath)
+        params = common_params(:delete, path: "#{Config.join_path(rpath)}")
+        post(Config.file_path, params)
+      end
     end
   end
 end

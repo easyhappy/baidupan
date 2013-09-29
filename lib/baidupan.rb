@@ -11,7 +11,7 @@ module Baidupan
   PAN_BASE_URL = "https://pcs.baidu.com/rest/2.0/pcs"
 
   class Base
-    attr_reader :body
+    attr_reader :body, :response
 
     def initialize(url, method=:get, params={}, body={}, opts={})
       @options = {
@@ -23,6 +23,7 @@ module Baidupan
       @options.merge!(opts)
       @request = Typhoeus::Request.new(url, @options)
       @request.on_complete do |response|
+        @response = response
         if response.success?
           if response.headers["Content-Disposition"] =~ /attachment;file/ or response.headers["Content-Type"] =~ /image\//
             @body = response.body
