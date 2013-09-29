@@ -6,7 +6,7 @@ module Baidupan
   class FsCmd < Base
     class << self
 
-      def list(rpath, **opts)
+      def list(rpath, opts={})
         opts.merge!(common_params(:list, path: "#{Config.app_root}/#{rpath}"))
         get(Config.file_path, opts)
       end
