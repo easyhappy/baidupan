@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Baidupan::VERSION
   spec.authors       = ["AndyHu"]
   spec.email         = ["meeasyhappy@gmail.com"]
-  spec.description   = %q{利用百度云盘接口， 实现文件备份功能}
+  spec.description   = %q{利用百度云盘接口， 实现文件备份功能 如果您有建议请在这里留言: http://ml-china.org/blog/21}
   spec.summary       = %q{文件上传和查看等功能}
   spec.homepage      = "http://ml-china.org"
   spec.license       = "MIT"
