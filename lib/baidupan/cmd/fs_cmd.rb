@@ -76,7 +76,7 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       say "total upload #{count} files"
     end
 
-    desc 'download file [Remote path, Local path',  'download remote file to local, not support for download dir'
+    desc 'download file [Remote path, Local path',  '下载单个文件 download remote file to local, not support for download dir'
     def download(rpath, lpath=nil)
       lpath = (lpath||rpath).dup
       res = Baidupan::FsCmd.download(rpath, lpath, options.dup)
@@ -101,7 +101,7 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       say Baidupan::FsCmd.url(rpath)
     end
 
-    desc "thumbnail rpath", "获取缩略图"
+    desc "thumbnail rpath", "获取指定图片文件的缩略图。"
     option :quality, type: :numeric, desc: "缩略图的质量，默认为“100”，取值范围(0,100]", default: 100
     option :height, type: :numeric, desc: "指定缩略图的高度，取值范围为(0,1600]", default: 200
     option :width, type: :numeric, desc: "指定缩略图的宽度，取值范围为(0,1600]", default: 200
@@ -110,7 +110,7 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       say Baidupan::FsCmd.thumbnail(rpath, opts)
     end
 
-    desc 'mkdir rpath', 'mkdir remote path, e.g. mkdir path/to/newdir'
+    desc 'mkdir rpath', '创建目录 mkdir remote path, e.g. mkdir path/to/newdir'
     def mkdir(rpath)
       print_item Baidupan::FsCmd.mkdir(rpath).body
     end
@@ -135,7 +135,7 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
     end
     map cp: :copy
 
-    desc 'delete rpath', 'delete a remote path'
+    desc 'delete rpath', '删除单个文件/目录 delete a remote path'
     option :force, type: :boolean, default: false
     def delete(rpath)
       if options[:force] || yes?("Are you sure to delte #{rpath}?")
@@ -146,5 +146,12 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       end
     end
     map del: :delete
+
+    desc "quota", '获取当前用户空间配额信息'
+    def quota
+      body = Baidupan::FsCmd.quota.body
+      say "总空间为:#{body[:quota]*1.0/1024**3}G"
+      say "已用: #{body[:used]*1.0/1024**3}G"
+    end
   end
 end

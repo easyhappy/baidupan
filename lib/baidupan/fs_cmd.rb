@@ -58,6 +58,11 @@ module Baidupan
         params = common_params(:delete, path: "#{Config.join_path(rpath)}")
         post(Config.file_path, params)
       end
+
+      def quota
+        params = common_params(:info)
+        get(Config.other_api_path(:quota), params)
+      end
     end
   end
 end

@@ -29,7 +29,11 @@ module Baidupan
       end
 
       def thumbnail
-        File.join(self.base_url, 'thumbnail')
+        File.join(self.base_url, "thumbnail")
+      end
+
+      def other_api_path(api)
+        File.join(self.base_url, api.to_s)
       end
 
       def time_format
