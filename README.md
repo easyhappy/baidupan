@@ -1,4 +1,6 @@
-# Baidupan
+# Baidupan 反馈建议
+
+http://ml-china.org/blog/21
 
 TODO: Write a gem description
 
