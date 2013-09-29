@@ -39,6 +39,13 @@ module Baidupan
       def mkdir(rpath)
         post(Config.file_path, common_params(:mkdir, path: "#{Config.join_path(rpath)}"))
       end
+
+      def move(from_rpath, to_rpath)
+        params = common_params(:move, 
+                               from: "#{Config.join_path(from_rpath)}",
+                               to: "#{Config.join_path(to_rpath)}")
+        post(Config.file_path, params)
+      end
     end
   end
 end

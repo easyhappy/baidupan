@@ -16,7 +16,6 @@ module Baidupan::Cmd
       end
     end
 
-
     desc 'list [Remote path]', 'list files under Remote path'
     def list(rpath=nil)
       res = Baidupan::FsCmd.list(rpath)
@@ -52,7 +51,6 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
         ldir = File.join(ldir, "**")
         opts.delete(:recursive)
       end
-
 
       files = Dir.glob(File.join(ldir, file_pattern)).select{|f| File.file?(f)}
       
@@ -115,6 +113,14 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
     desc 'mkdir rpath', 'mkdir remote path, e.g. mkdir path/to/newdir'
     def mkdir(rpath)
       print_item Baidupan::FsCmd.mkdir(rpath).body
+    end
+
+    desc 'move FROM_RPATH, TO_RPATH', 'move a remote path/to/from --> path/to/to'
+    def mv(from_rpath, to_rpath)
+      if to_rpath[-1] == '/'
+        to_rpath += File.basename(from_rpath)
+      end
+      say Baidupan::FsCmd.move(from_rpath, to_rpath).body
     end
   end
 end
