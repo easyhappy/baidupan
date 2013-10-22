@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# coding: utf-8
 
 require 'baidupan/cmd/fs_cmd'
 Baidupan::Cmd::FsCmd.start
