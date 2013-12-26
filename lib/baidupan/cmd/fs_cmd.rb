@@ -18,7 +18,6 @@ module Baidupan::Cmd
 
     desc 'list [Remote path]', 'list files under Remote path'
     def list(rpath=nil)
-      binding.pry
       res = Baidupan::FsCmd.list(rpath)
       res.body[:list].each do |item|
         print_item(item)
