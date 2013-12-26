@@ -14,7 +14,6 @@ module Baidupan
       def upload(lpath, rpath, opts={})
       	params = common_params(:upload, path: "#{Config.join_path(rpath, File.basename(lpath))}").merge(ondup: :newcopy)
       	params[:ondup] = opts.delete(:ondup) if opts[:ondup]
-        
         body = {:file => File.open(lpath)}
         opts[:noprogress] ||= true
 
