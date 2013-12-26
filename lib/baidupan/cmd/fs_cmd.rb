@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'baidupan'
 require 'baidupan/cmd/base'
 require 'baidupan/fs_cmd'

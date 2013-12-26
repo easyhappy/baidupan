@@ -1,3 +1,4 @@
+# coding: utf-8
 require "typhoeus"
 require 'multi_json'
 
