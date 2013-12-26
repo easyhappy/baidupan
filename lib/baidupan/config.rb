@@ -45,6 +45,13 @@ module Baidupan
           File.join(rpath, lpath.to_s)
         end
       end
+
+      def rewrite_file(params)
+        params.each do |key, value|
+          single_instance.config[key] = value
+        end
+        File.open(CONF_FILE, 'w') {|f| f.write single_instance.config.to_yaml }
+      end
     end
 
     private

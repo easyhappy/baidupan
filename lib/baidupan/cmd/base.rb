@@ -38,8 +38,8 @@ module Baidupan::Cmd
       atoken = $1 if $1
 
       raise "Invalid token: #{atoken}!" if atoken !~ /^[\da-f\.\-]*$/
-      File.open(Baidupan::CONF_FILE, "a"){|f| f.puts ":access_token: #{atoken}" }
-
+      #File.open(Baidupan::CONF_FILE, "a"){|f| f.puts ":access_token: #{atoken}" }
+      Baidupan::Config.rewrite_file({:access_token => atoken})
       say '-'*60
       say "Have append access token into file: #{Baidupan::CONF_FILE}"
     end
