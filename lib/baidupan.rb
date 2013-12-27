@@ -33,6 +33,7 @@ module Baidupan
           end
         end
       end
+      Fiber.yield
     end
 
     def run!

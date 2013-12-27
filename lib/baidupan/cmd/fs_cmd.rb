@@ -1,4 +1,9 @@
 # coding: utf-8
+
+require 'eventmachine'
+require 'em-http'
+require 'fiber'
+
 require 'baidupan'
 require 'baidupan/cmd/base'
 require 'baidupan/fs_cmd'
@@ -65,14 +70,21 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
       origin_rdir = rdir
       current_dir = Regexp.new("^#{File.join(old_ldir, '')}")
       
+      fibers = []
       files.each do |file|
         dirname = File.dirname(file.gsub(current_dir, ''))
         dirname = '' if dirname == '.'
 
         rdir = File.join(origin_rdir, dirname)
-        Baidupan::FsCmd.upload(file, rdir, opts)
+        fibers << Fiber.new do
+          Baidupan::FsCmd.upload(file, rdir, opts)
+        end
         say file
         count += 1
+      end
+
+      EM.run do
+        fibers.map(&:resume)
       end
       say "total upload #{count} files"
     end
