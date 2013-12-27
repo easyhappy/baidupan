@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency   "multi_json",   "~> 1.8.0"
   spec.add_development_dependency   "eventmachine"
   spec.add_development_dependency   "fiber"
-  spec.add_development_dependency   "em-http"
+  spec.add_development_dependency   "em-http-request"
   spec.add_development_dependency   "pry",          "~> 0.9.12.2"
   spec.add_development_dependency   "pry-nav",      "~> 0.2.3"
   spec.add_runtime_dependency       "thor"
