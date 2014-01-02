@@ -7,6 +7,7 @@ require 'fiber'
 require 'baidupan'
 require 'baidupan/cmd/base'
 require 'baidupan/fs_cmd'
+require 'baidupan/cmd/hash'
 
 module Baidupan::Cmd
 
@@ -21,11 +22,12 @@ module Baidupan::Cmd
       end
     end
 
-    desc 'list [Remote path]', 'list files under Remote path'
-    def list(rpath=nil)
-      res = Baidupan::FsCmd.list(rpath)
-      res.body[:list].each do |item|
-        print_item(item)
+    desc 'list [path1 path2 ...]', 'list files under Remote path'
+    def list(*rpaths)
+      res = Baidupan::FsCmd.list(rpaths) do |response_body|
+        res.body[:list].each do |item|
+          print_item(item)
+        end
       end
     end
     map ls: :list

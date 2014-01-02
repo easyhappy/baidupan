@@ -1,14 +1,18 @@
 require 'baidupan'
 require 'baidupan/config'
+require 'baidupan/cmd/hash'
 
 module Baidupan
   
   class FsCmd < Base
     class << self
 
-      def list(rpath, opts={})
-        opts.merge!(common_params(:list, path: "#{Config.app_root}/#{rpath}"))
-        get(Config.file_path, opts)
+      def list(rpaths, opts={}, &block)
+        opts_array = rpaths.map do |path| 
+          opts.deep_copy.merge(common_params(:list, path: "#{Config.app_root}/#{rpath}"))
+        end
+
+        get(Config.file_path, opts_array, &block)
       end
 
       def upload(lpath, rpath, opts={})
