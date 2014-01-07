@@ -1,5 +1,5 @@
 class Hash
-  def deep_copy(o)
-    Marshal.load(Marshal.dump(o))
+  def deep_copy
+    Marshal.load(Marshal.dump(self))
   end
 end

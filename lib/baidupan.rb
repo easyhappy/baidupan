@@ -1,7 +1,6 @@
 # coding: utf-8
 require "typhoeus"
 require 'multi_json'
-require 'fiber'
 
 require "baidupan/version"
 require "baidupan/config"
@@ -10,18 +9,26 @@ require "baidupan/core_ext"
 require 'pry'
 
 module Baidupan
-  PAN_BASE_URL = "https://pcs.baidu.com/rest/2.0/pcs"
-
   class Base
     attr_reader :hydra, :body
+    @@single_instance = nil
 
     class << self
-      def get(urls, params={}, opts={}, &block)
-        new(urls, :get, params, nil, opts).run!
+
+      def get(url, opts, params={}, &block)
+        opts = [opts] unless opts.kind_of?(Array)
+
+        single_instance = Baidupan::Base.new opts.size  
+        opts.each do |opt|
+          single_instance.queue_request(url, :get, opt, nil, params, &block)
+        end
+
+        single_instance.run!
       end
 
-      def post(urls, params={}, body={}, opts={}, &block)
-        new(url, :post, params, body, opts, &block).run!
+      def post(url, opts={}, body={}, params={}, &block)
+        @@single_instance ||= Baidupan::Base.new
+        @@single_instance.queue_request(url, :post, opts, body, params, &block)
       end
 
       def common_params(method, params={})
@@ -30,8 +37,7 @@ module Baidupan
       end
     end
 
-    private
-    def initialize(urls, method=:get, params={}, body={}, opts={}, &block)
+    def queue_request(url, method=:get, params={}, body={}, opts={}, &block)
       @options = {
         method: method,
         headers: {"User-Agent"=>"Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"},
@@ -39,25 +45,29 @@ module Baidupan
       }.merge(opts)
       @options.merge!(body: body) if body
 
-      @hydra = Typhoeus::Hydra.new(:max_concurrency => urls.size)
-      binding.pry
-      urls.each do |url|
-        request = Typhoeus::Request.new(url, @options)
-        request.on_complete do |response|
-          if response.success?
-            if response.headers["Content-Disposition"] =~ /attachment;file/ or response.headers["Content-Type"] =~ /image\//
-              body = response.body
-            else
-              body = MultiJson.load(response.body, symbolize_keys: true)
-            end
-            block.call(response.body) if block_given? 
+      request = Typhoeus::Request.new(url, @options)
+      request.on_complete do |response|
+        if response.success?
+          body = nil
+          if response.headers["Content-Disposition"] =~ /attachment;file/ or response.headers["Content-Type"] =~ /image\//
+            body = response.body
+          else
+            body = MultiJson.load(response.body, symbolize_keys: true)
           end
+          block.call(body, response.request.options[:params][:path]) if block_given?
         end
       end
+      
+      @hydra.queue request
     end
 
     def run!
       @hydra.run
+    end
+
+    private
+    def initialize(max_concurrency=200)
+      @hydra = Typhoeus::Hydra.new(:max_concurrency => max_concurrency)
     end
   end
 end
