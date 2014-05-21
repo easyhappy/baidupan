@@ -1,5 +1,5 @@
 # Baidupan 反馈建议
-
+https://rubygems.org/gems/baidupan
 http://ml-china.org/blog/21
 
 TODO: Write a gem description
