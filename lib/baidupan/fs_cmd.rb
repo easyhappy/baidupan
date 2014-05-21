@@ -1,28 +1,33 @@
 require 'baidupan'
 require 'baidupan/config'
+require 'baidupan/cmd/hash'
 
 module Baidupan
   
   class FsCmd < Base
+    SINGLE_PAN = nil
     class << self
 
-      def list(rpath, opts={})
-        opts.merge!(common_params(:list, path: "#{Config.app_root}/#{rpath}"))
-        get(Config.file_path, opts)
+      def list(rpaths, opts={}, &block)
+        opts_array = rpaths.map do |path| 
+          opts.deep_copy().merge(common_params(:list, path: "#{Config.app_root}/#{path}"))
+        end
+
+        get(Config.file_path, opts_array, &block)
       end
 
-      def upload(lpath, rpath, opts={})
+      def upload(lpath, rpath, opts={}, &block)
       	params = common_params(:upload, path: "#{Config.join_path(rpath, File.basename(lpath))}").merge(ondup: :newcopy)
       	params[:ondup] = opts.delete(:ondup) if opts[:ondup]
         body = {:file => File.open(lpath)}
         opts[:noprogress] ||= true
-
-      	post(Config.file_path, params, body, opts)
+        
+      	post(Config.file_path, params, body, opts, &block)
       end
 
       def download(rpath, lpath, opts={})
       	params = common_params(:download, path: "#{Config.join_path(rpath)}")
-		    get(Config.file_path, params, opts.merge(followlocation: true))
+        get(Config.file_path, params, opts.merge(followlocation: true))
       end
 
       def url(rpath)
@@ -58,9 +63,13 @@ module Baidupan
         post(Config.file_path, params)
       end
 
-      def quota
+      def quota(&block)
         params = common_params(:info)
-        get(Config.other_api_path(:quota), params)
+        get(Config.other_api_path(:quota), params, &block)
+      end
+
+      def run
+        @@single_instance.run!
       end
     end
   end

@@ -7,6 +7,7 @@ require 'fiber'
 require 'baidupan'
 require 'baidupan/cmd/base'
 require 'baidupan/fs_cmd'
+require 'baidupan/cmd/hash'
 
 module Baidupan::Cmd
 
@@ -19,13 +20,20 @@ module Baidupan::Cmd
         new_items << "#{Time.at(item[:mtime])}"
         print_in_columns new_items
       end
+
+      def print_segment
+        puts '-'*60
+      end
     end
 
-    desc 'list [Remote path]', 'list files under Remote path'
-    def list(rpath=nil)
-      res = Baidupan::FsCmd.list(rpath)
-      res.body[:list].each do |item|
-        print_item(item)
+    desc 'list [path1 path2 ...]', 'list files under Remote path'
+    def list(*rpaths)
+      res = Baidupan::FsCmd.list(rpaths) do |response_body, file_path|
+        puts "#{file_path}:"
+        response_body[:list].each do |item|
+          print_item(item)
+        end
+        print_segment
       end
     end
     map ls: :list
@@ -35,9 +43,10 @@ module Baidupan::Cmd
 overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”。
     Desc
     def upload(lpath, rpath=nil)
-      binding.pry
-      res = Baidupan::FsCmd.upload(lpath, rpath, options.dup)
-      print_item res.body
+      Baidupan::FsCmd.upload(lpath, rpath, options.dup) do |response_body|
+        print_item response_body
+      end
+      Baidupan::FsCmd.run
     end
 
     desc 'batch_upload [local dir, remote dir, file_pattern="*"]', <<-Desc
@@ -67,22 +76,16 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
 
       count = 0
       origin_rdir = rdir
+
       current_dir = Regexp.new("^#{File.join(old_ldir, '')}")
       
-      fibers = []
       files.reverse.each do |file|
         dirname = File.dirname(file.gsub(current_dir, ''))
         dirname = '' if dirname == '.'
-
         rdir = File.join(origin_rdir, dirname)
-        fibers << Fiber.new do
-          Baidupan::FsCmd.upload(file, rdir, opts)
-        end
+        Baidupan::FsCmd.upload(file, rdir, opts)
         say file
         count += 1
-      end
-      EM.run do
-        fibers.map(&:resume)
       end
       say "total upload #{count} files"
     end
@@ -160,9 +163,10 @@ overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进�
 
     desc "quota", '获取当前用户空间配额信息'
     def quota
-      body = Baidupan::FsCmd.quota.body
-      say "总空间为:#{body[:quota]*1.0/1024**3}G"
-      say "已用: #{body[:used]*1.0/1024**3}G"
+      Baidupan::FsCmd.quota do |body|
+        say "总空间为:#{body[:quota]*1.0/1024**3}G"
+        say "已用: #{body[:used]*1.0/1024**3}G"
+      end
     end
   end
 end
