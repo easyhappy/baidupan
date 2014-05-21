@@ -1,6 +1,7 @@
-# Baidupan 反馈建议
+gem描述
+  主要通过命令行 管理百度云盘的数据;
+
 https://rubygems.org/gems/baidupan
-http://ml-china.org/blog/21
 
 TODO: Write a gem description
 
