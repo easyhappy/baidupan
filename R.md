@@ -1,13 +1,17 @@
 React 的核心思想是：封装组件。
 各个组件维护自己的状态和 UI，当状态变更，自动重新渲染整个组件。
 基于这种方式的一个直观感受就是我们不再需要不厌其烦地来回查找某个 DOM 元素，然后操作 DOM 去更改 UI。
-React 大体包含下面这些概念：+
 
-组件
-JSX
-Virtual DOM
-Data Flow
-这里通过一个简单的组件来快速了解这些概念，以及建立起对 React 的一个总体认识。2
+React 大体包含下面这些概念：
+
+- 组件
+- JSX
+- Virtual DOM
+- Data Flow
+
+这里通过一个简单的组件来快速了解这些概念，以及建立起对 React 的一个总体认识。
+
+```ruby
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
@@ -17,6 +21,7 @@ class HelloMessage extends Component {
     return <div>Hello {this.props.name}</div>;
   }
 }
+```
 
 // 加载组件到 DOM 元素 mountNode
 render(<HelloMessage name="John" />, mountNode);
