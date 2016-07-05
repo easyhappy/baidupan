@@ -11,7 +11,7 @@ React 大体包含下面这些概念：
 
 这里通过一个简单的组件来快速了解这些概念，以及建立起对 React 的一个总体认识。
 
-```ruby
+```
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
@@ -41,4 +41,3 @@ Virtual DOM
 Data Flow
 
 “单向数据绑定”是 React 推崇的一种应用架构的方式。当应用足够复杂时才能体会到它的好处，虽然在一般应用场景下你可能不会意识到它的存在，也不会影响你开始使用 React，你只要先知道有这么个概念。
-
